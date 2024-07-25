@@ -7,6 +7,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verifyToken.js";
 import {uploadproduct} from '../middleware/file-upload.js'
+import Category from "../model/product/category.js";
 
 
 
@@ -131,5 +132,88 @@ router.get('/', async (req, res) => {
       res.status(500).json({ message: 'Server error' });
     }
   });
+
+
+
+  router.get('/category', async (req, res) => {
+    try {
+      const categories = await Category.find();
+      res.status(200).json(categories);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+
+  router.post('/category', async (req, res) => {
+    const { name } = req.body;
+  
+    // Check if name is provided
+    if (!name) {
+      return res.status(400).json({ message: 'Please provide a name for the category' });
+    } else {
+  
+      // Convert name to lowercase before saving
+      const lowercaseName = name.toLowerCase();
+  
+      try {
+        const existingCategory = await Category.findOne({ name: lowercaseName });
+        if (existingCategory) {
+          return res.status(400).json({ message: 'Category with this name already exists' });
+        } else {
+  
+          const category = new Category({ name: lowercaseName });
+          await category.save();
+  
+          // Use status code 201 for successful creation
+          res.status(200).json({ message: 'Category created successfully', category });
+        }
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    }
+  });
+  
+
+  // Update or Delete a category (combined endpoint)
+  router.put('/category/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name } = req.body;
+  
+    // Check if a request body is provided
+    if (!req.body) {
+      return res.status(400).json({ message: 'Please provide a request body' });
+    }
+  
+    try {
+      const category = await Category.findById(id);
+      if (!category) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+      const lowercaseName = name?.toLowerCase();
+      // Update logic
+      if (name) {
+        category.name = name;
+        const existingCategory = await Category.findOne({ name: lowercaseName });
+        if (existingCategory) {
+          return res.status(409).json({ message: 'Category with this name already exists' });
+        }
+        await category.save();
+
+        return res.status(200).json({ message: 'Category updated successfully' });
+      }
+  
+      // Delete logic (if no name provided)
+      await category.deleteOne();
+      res.status(200).json({ message: 'Category deleted successfully' });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+
+
 
 export default router;

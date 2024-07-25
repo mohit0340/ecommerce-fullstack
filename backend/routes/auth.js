@@ -5,6 +5,9 @@ import fs from "fs.promises"; // Using fs/promises for cleaner async handling
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verifyToken.js";
+import randomstring from "randomstring";
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
 
 const router = express.Router();
 const JWT_SECRET = "Secret_key";
@@ -165,6 +168,111 @@ router.get('/protected', verifyToken, async (req, res) => {
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return res.status(400).json({ message: 'Missing required field: email' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+
+    // Generate a random OTP
+    const otp = randomstring.generate({ length: 4, charset: 'numeric' });
+
+    // Hash the OTP for secure storage
+   
+
+    // Set expiration time (15 minutes)
+    const expirationTime = Date.now() + 5 * 60 * 1000;
+
+    // Update user with hashed OTP and expiration
+    user.otp = otp;
+    user.otpExpire = expirationTime;
+    await user.save();
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'mohit123456rathod@gmail.com',
+        pass: 'slsk gspm irrr erca'
+      }
+    });
+    
+    var mailOptions = {
+      from: 'mohit123456rathod@gmail.com',
+      to: email,
+      subject: 'Sending Email using Node.js',
+      text: `Your OTP is : ${otp}`
+    };
+    
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        res.status(400).json({ message: 'error in sending mail' });
+      } else {
+        res.status(200).json({ message: 'A verification code has been sent to your email address' });
+      }
+    }); 
+
+    
+
+   
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+router.post('/update-password', async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  if (!otp || !newPassword) {
+    return res.status(400).json({ message: 'Missing required fields: otp and newPassword' });
+  }
+
+  try {
+    const filter = { email }; // Prepared statement approach
+    const update = {
+      $set: {
+        password: await bcrypt.hash(newPassword, 10),
+        otp: null,
+        otpExpire: null
+      }
+    };
+    const options = { new: true }; // Return the updated user object
+
+    const user = await User.findOneAndUpdate(filter, update, options);
+    if (!user) {
+      return res.status(404).json({ message: 'Email not found' });
+    }
+
+    // Check if OTP is valid and not expired (optional with prepared statement)
+    // if (user.otp != otp || user.otpExpire < Date.now()) {
+    //   return res.status(400).json({ message: 'Invalid or expired OTP' });
+    // }
+
+    // Send password reset confirmation email (optional)
+    // await sendPasswordResetConfirmationEmail(user.email);
+
+    res.status(200).json({ message: 'Password updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

@@ -8,7 +8,7 @@ const JWT_SECRET = "Secret_key";
 
 const authenticate = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  console.log("Authorization Header:", authHeader);
+
 
   if (!authHeader) {
     return res.status(401).json({ message: "No token provided" });
@@ -21,7 +21,7 @@ const authenticate = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("Decoded Token:", decoded);
+   
     req.user = decoded;
     next();
   } catch (err) {
@@ -35,7 +35,8 @@ router.get("/users", authenticate, async (req, res) => {
   try {
     const userId = req.user;
     // Find the cart for the user
-    let userrole = await User.findById(userId.user.id);
+    
+    let userrole = await User.findById(userId.userId);
 
     if (userrole.role && userrole.role == "admin") {
       const users = await User.find();
@@ -96,15 +97,15 @@ router.get("/users/:_email", async (req, res) => {
 router.put("/", async (req, res) => {
   const { role, UserId } = req.body;
   console.log(role);
-
+  const lowercaseName = role.toLowerCase();
   try {
     if (!UserId || !role) {
       return res.status(404).json({ message: "No users found" });
     } else {
       const users = await User.updateOne({ _id: UserId }, [
-        { $set: { role: role } },
+        { $set: { role: lowercaseName } },
       ]);
-      if (users.acknowledged == true) {
+      if (users) {
         res
           .status(200)
           .json({ message: "User Role Updated successfully", users });

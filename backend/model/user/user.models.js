@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema(
       type:Number,
       
     },
-    otpExpires:{
+    otpExpire:{
       type:String,
       
 

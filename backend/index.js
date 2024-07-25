@@ -3,9 +3,14 @@ import mongoose from 'mongoose';
 import  userRoutes from "./routes/auth.js"
 import productRoutes from "./routes/product.js"
 import adminRoutes from './routes/admin.js'
+import cartRoutes from './routes/cart.js'
 import cors from 'cors'
+import {fileURLToPath} from 'url';
+import path from 'path';
 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app=express()
 
@@ -37,11 +42,14 @@ const connectDB = async () => {
 
 
 
-
+  app.use('/uploads/avatar', express.static(path.join(__dirname, 'uploads/avatar')));
+  app.use('/uploads/product', express.static(path.join(__dirname, 'uploads/product')));
 
   app.use('/api/users', userRoutes);
   app.use('/api/products', productRoutes);
   app.use('/api/admin', adminRoutes);
+  app.use('/api/cart', cartRoutes);
+
 
 
   
