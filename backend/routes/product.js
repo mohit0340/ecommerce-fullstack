@@ -2,12 +2,11 @@ import express from "express";
 import User from "../model/user/user.models.js";
 import Product from "../model/product/product.models.js";
 import {upload} from "../middleware/file-upload.js";
-import fs from "fs.promises"; 
+import fs from "fs"; 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import verifyToken from "../middleware/verifyToken.js";
 import {uploadproduct} from '../middleware/file-upload.js'
-
 
 
 
