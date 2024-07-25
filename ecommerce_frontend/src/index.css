@@ -3,5 +3,6 @@ body{
   padding: 0;
   box-sizing: border-box;
   width: 100%;
-  
+  background-image: "linear-gradient(to right, #A7E6FF , white, #A7E6FF)" !important;
+
 }

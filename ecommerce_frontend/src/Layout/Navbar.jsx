@@ -224,11 +224,11 @@ const adminPages = [
   { label: 'Users', path: '/users' },
   { label: 'Add Category', path: '/category/add' },
   { label: 'Add Product', path: '/product/add' },
-  { label: 'Products', path: '/product' }
+
 ];
 const userPages = [
   { label: 'Cart', path: '/cart' },
-  { label: 'Products', path: '/product' }
+  
 ];
 const publicPages = [
   { label: 'Login', path: '/login' },
@@ -241,7 +241,10 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate=useNavigate()
 
+  const token= localStorage.getItem('token')
   const { user, darkMode,setDarkMode  } = useContext(UserContext);
+
+  const imagePath = user?.avatar?.replace(/\\/g, '/');
 
   const toggleDarkMode=()=>{
     setDarkMode(!darkMode)
@@ -263,21 +266,21 @@ function Navbar() {
   };
 
   const getNavPages = () => {
-    if (!user) return publicPages;
+    if (!token) return publicPages;
     return user.role === 'admin' ? adminPages : userPages;
   };
 
 
-    const HandleLogout=()=>{
+    const HandleLogout=async()=>{
     localStorage.removeItem('token')
-    navigate('/login')
+    setTimeout(()=>{navigate('/login')},500)
 }
 
   return (
-    <AppBar position="static" >
+    <AppBar position="static" sx={{backgroundColor:darkMode?"black":"",color:darkMode?"#E2DFD0":"inherite"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
@@ -294,7 +297,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            DHARVEE
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -350,7 +353,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            LOGO
+            DHARVEE
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {getNavPages().map((page) => (

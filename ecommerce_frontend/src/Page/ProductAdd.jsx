@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,41 +11,74 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import MenuItem from '@mui/material/MenuItem';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-const defaultTheme = createTheme();
+import { UserContext } from '../Context/Context';
+import { useNavigate } from 'react-router-dom';
 
 const validationSchema = Yup.object().shape({
   productName: Yup.string().min(3, 'Product name must be at least 3 characters').required('Product name is required'),
   category: Yup.string().required('Category is required'),
   price: Yup.number().min(1, 'Price must be at least 1').required('Price is required'),
   description: Yup.string().required('Description is required'),
-  image: Yup.mixed().required('Image is required')
 });
-
-const categories = ['Electronics', 'Books', 'Clothing', 'Furniture', 'Toys']; // Example categories
 
 export default function ProductAdd() {
   const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
+  const { darkMode, category, CategoryGet, AddProducts } = useContext(UserContext);
+  const navigate = useNavigate();
 
-  const handleImageUpload = (setFieldValue) => (event) => {
+  useEffect(() => {
+    if (!category) {
+      CategoryGet();
+    }
+  }, [category, CategoryGet]);
+
+  const handleImageUpload = (event) => {
     const file = event.currentTarget.files[0];
     if (file) {
+      setFile(file);
       const reader = new FileReader();
       reader.onload = () => {
         setImage(reader.result);
-        setFieldValue('image', reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleAddProduct = (values) => {
-    // Add your add product logic here (e.g., API call)
-    alert('Product Added Successfully', JSON.stringify(values, null, 2));
+  const handleAddProduct = async (values) => {
+    const formData = new FormData();
+    formData.append('productName', values.productName);
+    formData.append('category', values.category);
+    formData.append('price', values.price);
+    formData.append('description', values.description);
+    if (file) {
+      formData.append('image', file);
+    }
+
+    const addata = await AddProducts(formData);
+    if (addata) {
+      navigate('/');
+    }
   };
+
+  const defaultTheme = createTheme({
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            backgroundImage: darkMode
+              ? 'linear-gradient(71deg, #181818, #404040, #181818)'
+              : 'linear-gradient(to right, #A7E6FF, white, #A7E6FF)',
+            color: darkMode ? '#E2DFD0' : 'black',
+          },
+        },
+      },
+    },
+  });
 
   return (
     <ThemeProvider theme={defaultTheme}>
+      <CssBaseline />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -68,12 +101,11 @@ export default function ProductAdd() {
               category: '',
               price: '',
               description: '',
-              image: null
             }}
             validationSchema={validationSchema}
             onSubmit={handleAddProduct}
           >
-            {({ handleChange, handleBlur, handleSubmit, setFieldValue, values, errors, touched }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
               <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
@@ -84,6 +116,15 @@ export default function ProductAdd() {
                       label="Product Name"
                       name="productName"
                       autoComplete="product-name"
+                      sx={{
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        },
+                      }}
                       onChange={handleChange('productName')}
                       onBlur={handleBlur('productName')}
                       value={values.productName}
@@ -100,17 +141,27 @@ export default function ProductAdd() {
                       label="Category"
                       name="category"
                       autoComplete="category"
+                      sx={{
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        },
+                      }}
                       onChange={handleChange('category')}
                       onBlur={handleBlur('category')}
                       value={values.category}
                       error={touched.category && Boolean(errors.category)}
                       helperText={touched.category && errors.category}
                     >
-                      {categories.map((option) => (
-                        <MenuItem key={option} value={option}>
-                          {option}
-                        </MenuItem>
-                      ))}
+                      {category.length > 0 &&
+                        category.map((option) => (
+                          <MenuItem key={option._id} value={option.name}>
+                            {option.name}
+                          </MenuItem>
+                        ))}
                     </TextField>
                   </Grid>
                   <Grid item xs={12}>
@@ -122,6 +173,15 @@ export default function ProductAdd() {
                       name="price"
                       type="number"
                       autoComplete="price"
+                      sx={{
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        },
+                      }}
                       onChange={handleChange('price')}
                       onBlur={handleBlur('price')}
                       value={values.price}
@@ -137,6 +197,15 @@ export default function ProductAdd() {
                       label="Description"
                       name="description"
                       autoComplete="description"
+                      sx={{
+                        "& .MuiInputBase-root": { color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        },
+                      }}
                       multiline
                       rows={4}
                       onChange={handleChange('description')}
@@ -157,7 +226,7 @@ export default function ProductAdd() {
                         type="file"
                         hidden
                         accept="image/*"
-                        onChange={handleImageUpload(setFieldValue)}
+                        onChange={handleImageUpload}
                       />
                     </Button>
                     {touched.image && errors.image && <Typography color="error">{errors.image}</Typography>}

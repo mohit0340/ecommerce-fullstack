@@ -131,12 +131,12 @@ const Context = ({ children }) => {
     setProgress(true)
     
     try {
-      let res = await axios.get("http://localhost:5000/api/product");
+      let res = await axios.get("http://localhost:5000/api/products");
       if (res.status == 200) {
         
           setProgress(false)
           //   toast.success(res.data.message);
-          setProduct(res.data.product);
+          setProduct(res.data.products);
     
     
 
@@ -158,7 +158,7 @@ const Context = ({ children }) => {
   const AddProducts = async (formData) => {
     try {
       let res = await axios.post(
-        "http://localhost:5000/api/product/add",
+        "http://localhost:5000/api/products/add",
         formData,
         {
           headers: {
@@ -210,7 +210,7 @@ const Context = ({ children }) => {
     }
   };
 
-  const getUsersData = async (product) => {
+  const getUsersData = async () => {
     try {
       const res = await axios.get("http://localhost:5000/api/admin/users", {
         headers: {
@@ -264,10 +264,11 @@ const Context = ({ children }) => {
 
   const CategoryGet=async()=>{
     try{
-       const res=await axios.get('http://localhost:5000/api/product/category/all')
+       const res=await axios.get('http://localhost:5000/api/products/category')
        if(res.status==200){
-        setCategory(res.data.category)
+        setCategory(res.data)
         return true;
+        console.log(res)
        }
        else{
         return false;
