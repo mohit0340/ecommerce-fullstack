@@ -37,7 +37,7 @@ const PrivateRoute = ({  Component, roles }) => {
 
 
 
-  if (roles && !roles.includes(user.role)) {
+  if ( !roles?.includes(user.role)) {
      navigate('/')
   }
   

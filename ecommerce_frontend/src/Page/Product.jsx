@@ -31,11 +31,13 @@ const Product = () => {
   return (
     <ThemeProvider theme={defaultTheme}>
         <CssBaseline></CssBaseline>
+        
       <Container sx={{ marginY: "30px" }}>
+      <Typography variant='h4' sx={{marginBottom:"20px"}}>Products</Typography>
         {product && Object.keys(product).length > 0 ? (
           Object.keys(product).map((category) => (
             <Typography key={category} component={'div'} sx={{marginBottom:"30px"}}>
-              <Typography variant="h3" gutterBottom>
+              <Typography variant="h4" gutterBottom>
                 {category.charAt(0).toUpperCase() + category.slice(1)}
               </Typography>
               <Grid container spacing={2}>

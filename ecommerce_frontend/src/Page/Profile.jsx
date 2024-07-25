@@ -59,7 +59,7 @@ export default function Profile() {
   const [preview, setPreview] = React.useState(null);
   const { user, UpdateUser, getUserData,darkMode } = React.useContext(UserContext);
 
-
+  const imagePath = user?.avatar?.replace(/\\/g, '/');
   console.log(user);
 
  
@@ -284,7 +284,7 @@ export default function Profile() {
                       src={
                         preview
                           ? preview
-                          : `http://localhost:5000/api/images/${user?.avatar?.split("\\").pop()}`
+                          : `http://localhost:5000/${imagePath}`
                       }
                       alt="Selected Avatar"
                       height={200}

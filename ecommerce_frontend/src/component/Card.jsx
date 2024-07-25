@@ -1,14 +1,16 @@
 import React, { useContext } from 'react';
-import { Button, Card, CardActionArea, CardContent, CardMedia, Typography } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardMedia, Icon, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { UserContext } from '../Context/Context';
 import NotFound from '../Page/NotFound';
-
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
+import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 
 const ProductCard = ({ product }) => {
   const { productname, image, description, price } = product;
   const {user,darkMode}=useContext(UserContext)
   const imagePath = image.replace(/\\/g, '/');
+ 
 
   return (
     <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: { xs: 'row', md: 'row',backgroundColor:darkMode?"#404040":"inherit",color:darkMode?"#E2DFD0":"inherit" } }} >
@@ -37,7 +39,7 @@ const ProductCard = ({ product }) => {
             </Typography>
           )}
         </CardContent>
-        <Typography sx={{mr:'15px'}}>{user?.role=="admin"?"":<Button variant='contained'>add To cart</Button>}</Typography>
+        <Typography sx={{mr:'15px'}}>{user?.role=="admin"?<Icon component={'button'}><EditRoundedIcon></EditRoundedIcon></Icon>:<Button variant='contained'>add To cart</Button>}</Typography>
         </Typography>
       </CardActionArea>
     </Card>
