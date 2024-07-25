@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import  userRoutes from "./routes/auth.js"
 import productRoutes from "./routes/product.js"
+import adminRoutes from './routes/admin.js'
 import cors from 'cors'
 
 
@@ -40,6 +41,8 @@ const connectDB = async () => {
 
   app.use('/api/users', userRoutes);
   app.use('/api/products', productRoutes);
+  app.use('/api/admin', adminRoutes);
+
 
   
 
