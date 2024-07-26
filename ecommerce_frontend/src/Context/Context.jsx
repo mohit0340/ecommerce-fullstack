@@ -127,11 +127,16 @@ const Context = ({ children }) => {
   };
   
 
-  const getProducts = async () => {
+  const getProducts = async (categoryval,searchterm) => {
     setProgress(true)
     
     try {
-      let res = await axios.get("http://localhost:5000/api/products");
+    
+      let res = await axios.get(`http://localhost:5000/api/products/`,{ params: {
+        "category":categoryval,
+        "searchTerm":searchterm
+      }});
+  
       if (res.status == 200) {
         
           setProgress(false)
@@ -157,6 +162,7 @@ const Context = ({ children }) => {
 
   const AddProducts = async (formData) => {
     try {
+
       let res = await axios.post(
         "http://localhost:5000/api/products/add",
         formData,
