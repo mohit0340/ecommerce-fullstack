@@ -1,6 +1,7 @@
 import { response, Router } from "express";
 import User from "../model/user/user.models.js"; // Assuming the correct path
 import jwt from "jsonwebtoken";
+import verifyToken from "../middleware/verifyToken.js";
 
 const router = Router();
 
@@ -94,11 +95,15 @@ router.get("/users/:_email", async (req, res) => {
   }
 });
 
-router.put("/", async (req, res) => {
-  const { role, UserId } = req.body;
+router.put("/",verifyToken,async (req, res) => {
+  const {userId}=req.user
+  try {
+    const admin= User.findById(userId)
+    if(admin?.role=="admin"){
+  const { role, Id } = req.body;
   console.log(role);
   const lowercaseName = role.toLowerCase();
-  try {
+ 
     if (!UserId || !role) {
       return res.status(404).json({ message: "No users found" });
     } else {
@@ -110,6 +115,9 @@ router.put("/", async (req, res) => {
           .status(200)
           .json({ message: "User Role Updated successfully", users });
       }
+    }}
+    else{
+      res.status(401).json('You have not authority for update role')
     }
   } catch (err) {
     console.error(err); // Log the error for debugging

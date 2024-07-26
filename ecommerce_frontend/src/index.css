@@ -3,6 +3,7 @@ body{
   padding: 0;
   box-sizing: border-box;
   width: 100%;
+min-height: 100vh;
   background-image: "linear-gradient(to right, #A7E6FF , white, #A7E6FF)" !important;
 
 }

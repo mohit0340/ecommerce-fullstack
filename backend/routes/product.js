@@ -133,6 +133,29 @@ router.get('/', async (req, res) => {
     }
   });
 
+  router.delete('/:id',async(req,res)=>{
+    const { id } = req.params;
+    try{
+      if(id){
+      const deleteProduct=await Product.deleteOne({_id:id})
+
+      if(deleteProduct){
+        res.status(200).json({message:"Product deleted Successfully"})
+      }
+      else{
+        res.status(400).json({message:"Somthing went wrong!"})
+      }}
+      else{
+        res.status(404).json({message:"Product not Found!"})
+      }
+
+    }
+    catch(err){
+      res.status(500).json({message:"Server Error",err})  
+    }
+
+  })
+
 
 
   router.get('/category', async (req, res) => {

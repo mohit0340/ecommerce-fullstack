@@ -31,7 +31,7 @@ export default function ProductAdd() {
     if (!category) {
       CategoryGet();
     }
-  }, [category, CategoryGet]);
+  }, [category]);
 
   const handleImageUpload = (event) => {
     const file = event.currentTarget.files[0];

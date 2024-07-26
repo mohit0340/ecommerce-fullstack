@@ -15,12 +15,12 @@ const Product = () => {
     if (!product ) {
       getProducts();
     }
-  }, [product, getProducts]);
+  }, [product]);
 useEffect(()=>{
 if(!category){
     CategoryGet()
 }
-},[])
+},[category])
 
 
 
@@ -40,15 +40,7 @@ if(!category){
     };
   
 
-  const filteredProducts = Object.keys(product)?.reduce((acc, category) => {
-    const items = product[category].filter((item) =>
-      item?.name?.toLowerCase().includes(searchTerm?.toLowerCase())
-    );
-    if (items.length) {
-      acc[category] = items;
-    }
-    return acc;
-  }, {});
+
 
   const defaultTheme = createTheme({
     components: {
@@ -69,8 +61,8 @@ if(!category){
     <ThemeProvider theme={defaultTheme}>
       <CssBaseline />
       <Container sx={{ marginY: "30px" }}>
-        <Box display="flex" alignItems="center" justifyContent="space-between" sx={{ marginBottom: "20px" }}>
-          <Typography variant='h4'>Products</Typography>
+        <Box  alignItems="center" justifyContent="space-between" sx={{ marginBottom: "20px",display:'flex',flexDirection:{xs:'column',md:'row'},mb:{xs:'20px',md:''} }}>
+          <Typography variant='h4' sx={{mb:{xs:'20px',md:''}}}>Products</Typography>
           <Box display="flex" gap={2}>
             <FormControl sx={{ minWidth: 120 }} size="small">
               <InputLabel id="category-select-label" sx={{ color: darkMode ? "#E2DFD0" : "" }}>Category</InputLabel>

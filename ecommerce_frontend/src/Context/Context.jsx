@@ -187,6 +187,54 @@ const Context = ({ children }) => {
     }
   };
 
+  const DeleteProducts = async (id) => {
+    try {
+
+      let res = await axios.delete(
+        `http://localhost:5000/api/products/${id}`
+      );
+      if (res.status == 200) {
+        toast.success(res.data.message);
+        getProducts();
+        return true;
+      } else {
+        console.log("Product Delete in error", res);
+        return false;
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+      console.log(err);
+      return false;
+    }
+  };
+
+  const UpdateProducts = async (id,formData) => {
+    try {
+
+      let res = await axios.put(
+        `http://localhost:5000/api/products/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (res.status == 200) {
+        toast.success(res.data.message);
+        getProducts();
+        return true;
+      } else {
+        console.log("Product add in error", res);
+        return false;
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+      console.log(err);
+      return false;
+    }
+  };
+
   const UpdateUser = async (formData) => {
     try {
       const res = await axios.put(
@@ -196,6 +244,34 @@ const Context = ({ children }) => {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `${token}`,
+          },
+        }
+      );
+      if (res.status === 200) {
+        toast.success(res.data.message);
+        getUserData(token);
+        console.log("user updated successfully");
+        return true;
+      } else {
+        toast.error("user update failed");
+        console.log("user update failed");
+        return false;
+      }
+    } catch (err) {
+      toast.error(err.response.data.message);
+      console.log(err.response.data.message);
+      return false;
+    }
+  };
+
+  const UpdateUserRole = async (role, UserId) => {
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/admin",
+        {role:role,Id:UserId},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -412,6 +488,7 @@ const Context = ({ children }) => {
         category,
         darkMode,
         setDarkMode,
+        UpdateProducts,
         UpdateCategory,
         setProgress,
         CartData,
@@ -420,8 +497,10 @@ const Context = ({ children }) => {
         CategoryAdd,
         setUsersData,
         getUsersData,
+        UpdateUserRole,
         setCart,
         setUser,
+        DeleteProducts,
         getUserData,
         UserLogin,
         UserRegister,

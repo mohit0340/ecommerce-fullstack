@@ -4,12 +4,17 @@ import { Container, createTheme, Table, TableBody, TableCell, TableContainer, Ta
 import { UserContext } from '../Context/Context';
 
 const Users = () => {
-  const { darkMode ,getUsersData,usersData} = useContext(UserContext);
+  const { darkMode ,getUsersData,usersData,UpdateUserRole} = useContext(UserContext);
 
 
 
 
-console.log(usersData)
+
+
+  const updateRole=(role,userid)=>{
+    UpdateUserRole(role,userid)
+
+  }
 
 
   useEffect(()=>{
@@ -74,7 +79,8 @@ console.log(usersData)
                   <TableCell sx={{color:darkMode?"#E2DFD0":"inherit",textAlign:"center"}}>
                     <Select
                       value={user.role}
-                      sx={{color:darkMode?"#E2DFD0":"inherit",textAlign:"center"}}
+                      onChange={(e)=>{updateRole(e.target.value,user._id)}}
+                      sx={{color:darkMode?"#E2DFD0":"inherit",textAlign:"center",width:"100px"}}
                     //   onChange={(e) => handleRoleChange(user.id, e.target.value)}
                     >
                       <MenuItem value="user">User</MenuItem>
