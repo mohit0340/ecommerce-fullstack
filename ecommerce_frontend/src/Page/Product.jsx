@@ -1,10 +1,16 @@
 import { ThemeProvider } from '@emotion/react';
 import {
-  Container, createTheme, Typography, Grid, CssBaseline, TextField, MenuItem, Box, Select, FormControl, InputLabel
-} from '@mui/material';
+  Container, createTheme, Typography, Grid, CssBaseline, TextField, MenuItem, Box, Select, FormControl, InputLabel,
+  
+} 
+from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
+
 import ProductCard from '../component/Card';
 import { UserContext } from '../Context/Context';
+
+
 
 const Product = () => {
   const { darkMode, getProducts, product, category,CategoryGet } = useContext(UserContext);
@@ -65,7 +71,7 @@ if(!category){
           <Typography variant='h4' sx={{mb:{xs:'20px',md:''}}}>Products</Typography>
           <Box display="flex" gap={2}>
             <FormControl sx={{ minWidth: 120 }} size="small">
-              <InputLabel id="category-select-label" sx={{ color: darkMode ? "#E2DFD0" : "" }}>Category</InputLabel>
+              {/* <InputLabel id="category-select-label" sx={{ color: darkMode ? "#E2DFD0" : "" }}>Category</InputLabel> */}
               <Select
                 labelId="category-select-label"
                 value={selectedCategory}
@@ -86,7 +92,7 @@ if(!category){
               </Select>
             </FormControl>
             <TextField
-              label="Search"
+              label="Search..."
               variant="outlined"
               size="small"
               value={searchTerm}

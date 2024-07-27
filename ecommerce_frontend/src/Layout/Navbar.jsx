@@ -201,8 +201,7 @@
 // export default Navbar;
 
 
-
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -217,38 +216,38 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { UserContext } from '../Context/Context';
-import { Link , useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
+import Badge from '@mui/material/Badge';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { styled } from '@mui/material/styles';
+
 
 const adminPages = [
   { label: 'Users', path: '/users' },
   { label: 'Add Category', path: '/category/add' },
   { label: 'Add Product', path: '/product/add' },
-
 ];
 const userPages = [
   { label: 'Cart', path: '/cart' },
-  
 ];
 const publicPages = [
   { label: 'Login', path: '/login' },
-  { label: 'Register', path: '/register' }
+  { label: 'Register', path: '/register' },
 ];
-
 
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const navigate=useNavigate()
-
-  const token= localStorage.getItem('token')
-  const { user, darkMode,setDarkMode  } = useContext(UserContext);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+  const { user, darkMode,getUserData, setDarkMode, cart,CartData } = useContext(UserContext);
 
   const imagePath = user?.avatar?.replace(/\\/g, '/');
 
-  const toggleDarkMode=()=>{
-    setDarkMode(!darkMode)
-  }
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -271,22 +270,33 @@ function Navbar() {
   };
 
 
-    const HandleLogout=async()=>{
-    localStorage.removeItem('token')
-    setTimeout(()=>{navigate('/login')},500)
-}
+  useEffect(()=>{
+    if(!user){
+getUserData()
+    }
+  },[user])
+  useEffect(()=>{
+    if(!cart){
+      CartData(user._id)
+    }
+  },[cart])
+
+  const handleLogout = async () => {
+    localStorage.removeItem('token');
+    setTimeout(() => {
+      navigate('/login');
+    }, 500);
+  };
 
   return (
-    <AppBar position="static" sx={{backgroundColor:darkMode?"black":"",color:darkMode?"#E2DFD0":"inherite"}}>
+    <AppBar position="static" sx={{ backgroundColor: darkMode ? 'black' : '', color: darkMode ? '#E2DFD0' : 'inherit' }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          {/* <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} /> */}
           <Typography
             variant="h6"
             noWrap
             component={Link}
-                        to={"/"}
-            
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -336,12 +346,11 @@ function Navbar() {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
           <Typography
             variant="h5"
             noWrap
             component={Link}
-            to={"/"}
+            to="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -379,7 +388,16 @@ function Navbar() {
             {user && (
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src={`http://localhost:5000/${imagePath}`} />
+                  <Avatar alt="User Avatar" src={`http://localhost:5000/${imagePath}`} />
+                </IconButton>
+              </Tooltip>
+            )}
+             {user?.role === 'user' && ( 
+              <Tooltip title={`Total cart Item : ${cart.length}`}>
+                <IconButton component={Link} to="/cart" color="inherit">
+                  <Badge badgeContent={cart?.length} color="error">
+                    <ShoppingCartIcon />
+                  </Badge>
                 </IconButton>
               </Tooltip>
             )}
@@ -399,11 +417,12 @@ function Navbar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-                   <MenuItem  onClick={handleCloseUserMenu}>
-                   <Typography component={Link} to="/profile" textAlign="center">Profile</Typography>
-                   <Typography  onClick={HandleLogout}  textAlign="center">Logout</Typography>
-
-                 </MenuItem>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography component={Link} to="/profile" textAlign="center">Profile</Typography>
+              </MenuItem>
+              <MenuItem onClick={() => { handleCloseUserMenu(); handleLogout(); }}>
+                <Typography textAlign="center">Logout</Typography>
+              </MenuItem>
             </Menu>
           </Box>
         </Toolbar>

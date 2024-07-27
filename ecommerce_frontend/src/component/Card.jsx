@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Card, CardActionArea, CardContent, CardMedia, Typography, IconButton, Modal, Box, TextField, MenuItem } from '@mui/material';
+import { Button, Card, CardActionArea, CardContent, CardMedia, Typography, IconButton, Modal, Box, TextField, MenuItem, styled } from '@mui/material';
 import { UserContext } from '../Context/Context';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
@@ -8,9 +8,10 @@ import * as Yup from 'yup';
 
 
 
+
 const ProductCard = ({ product }) => {
   const { productname, image, description, price,_id } = product;
-  const { user, darkMode,UpdateProducts ,category,CategoryGet,DeleteProducts} = useContext(UserContext);
+  const { user, darkMode,UpdateProducts ,category,CategoryGet,DeleteProducts,CartUpdatet,CartData} = useContext(UserContext);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [newImage, setNewImage] = useState(null);
@@ -50,6 +51,13 @@ useEffect(()=>{
 },[!category])
 
 
+const HandleAddToCart=()=>{
+const  data = CartUpdatet({userId:user?._id, productId:_id, quantity:1, action:"add",message:"Item Added to cart Successfully"})
+ if(data){
+  CartData(user._id)
+ } 
+}
+
 
 const editmodalstyle={
   backgroundColor: darkMode
@@ -87,7 +95,7 @@ color: darkMode ? "#E2DFD0" : "black",
                 <IconButton size={'large'} color='primary' onClick={handleEditOpen}><EditRoundedIcon /></IconButton>
                 <IconButton color='error' onClick={handleDeleteOpen}><DeleteForeverRoundedIcon /></IconButton>
               </> :
-              <Button variant='contained'>Add to Cart</Button>}
+              <Button variant='contained' onClick={()=>HandleAddToCart()}>Add to Cart</Button>}
           </Typography>
         </Typography>
       </CardActionArea>

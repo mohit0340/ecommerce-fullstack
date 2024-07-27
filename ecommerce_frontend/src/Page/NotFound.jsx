@@ -1,6 +1,9 @@
 import React from "react";
 import Navbar from "../Layout/Navbar";
-import { Typography } from "@mui/material";
+import {  Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+
+
 
 const NotFound = () => {
   return (

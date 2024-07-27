@@ -12,15 +12,19 @@ const router=express.Router();
 
 router.get('/:userId', async (req, res) => {
     const { userId } = req.params;
+    
   
     try {
       const cart = await Cart.findOne({ addedby: userId }).populate('products.product');
   
       if (!cart) {
-        return res.status(404).json({ message: 'Cart not found for the user' });
+        return res.status(404).json({ message: 'Please add cart in items' });
+      }
+      else{
+        res.status(200).json({message:"cart get successfully",cart:cart});
       }
   
-      res.status(200).json(cart);
+      
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });

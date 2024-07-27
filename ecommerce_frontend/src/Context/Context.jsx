@@ -15,7 +15,7 @@ const Context = ({ children }) => {
   const [product, setProduct] = useState("");
   const [darkMode,setDarkMode]=useState(false);
   const [progress,setProgress]=useState(false)
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState('');
   const [usersData, setUsersData] = useState("");
   const [category,setCategory]=useState('')
 
@@ -47,7 +47,7 @@ const Context = ({ children }) => {
     }
   };
 
-  const getUserData = async (token) => {
+  const getUserData = async () => {
     setProgress(true)
     try {
       if (token) {
@@ -235,15 +235,15 @@ const Context = ({ children }) => {
     }
   };
 
-  const UpdateUser = async (formData) => {
+  const UpdateUser = async (id,formData) => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/auth/update",
+        `http://localhost:5000/api/users/update/${id}`,
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -317,11 +317,11 @@ const Context = ({ children }) => {
     }
   };
 
-  const AddProductToCart = async (data) => {
+  const CartUpdatet = async ({userId, productId, quantity, action,message}) => {
     try {
       let res = await axios.post(
-        "http://localhost:5000/api/product/cart/add",
-        data,
+        "http://localhost:5000/api/cart/update",
+        {userId:userId, productId:productId, quantity:quantity, action:action},
         {
           headers: {
             "Content-Type": "application/json",
@@ -330,7 +330,7 @@ const Context = ({ children }) => {
         }
       );
       if (res.status == 200) {
-        toast.success(res.data.message);
+        toast.success(message);
         console.log(res);
         return true;
       } else {
@@ -416,24 +416,29 @@ const Context = ({ children }) => {
   }
   
 
-  const CartData=async()=>{
+  const CartData=async(id)=>{
     setProgress(true)
-    
+    console.log(
+      "hii")
       if(user?.role=="user"){
     
     try {
-        let res = await axios.get("http://localhost:5000/api/product/cart",{
-          headers:{
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`
-          }
-        }
+        let res = await axios.get(`http://localhost:5000/api/cart/${id}`
+        //   {
+        //   headers:{
+        //     'Content-Type': 'application/json',
+        //     "Authorization": `Bearer ${token}`
+        //   }
+        // }
         )
 
         console.log(res)
         if (res.status == 200) {
+          setCart(res.data.cart.products)
+          console.log(res)
+          
           setProgress(false)
-            dispatch(GetCartdetails(res.data.cart[0].products))
+            
             
           
           return true;
@@ -509,7 +514,7 @@ const Context = ({ children }) => {
         AddProducts,
         CheckToken,
         CategoryGet,
-        AddProductToCart,
+        CartUpdatet,
       }}
     >
       {children}

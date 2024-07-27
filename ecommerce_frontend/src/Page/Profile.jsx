@@ -21,6 +21,7 @@ import { UserContext } from "../Context/Context";
 
 
 
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -61,7 +62,7 @@ export default function Profile() {
 
   const imagePath = user?.avatar?.replace(/\\/g, '/');
   console.log(user);
-
+const token=localStorage.getItem('token')
  
 
   const HandleUpdateUser = async (values) => {
@@ -71,9 +72,12 @@ export default function Profile() {
     formData.append("email", values.email);
 
     formData.append("mobile", values.mobile);
-    formData.append("avatar", values.avatar);
+    if(values.avatar){
+      formData.append("avatar", values.avatar);
+    }
+  
     try {
-      let data = await UpdateUser(formData);
+      let data = await UpdateUser(user?._id,formData);
       if (data) {
         getUserData();
       }
@@ -83,6 +87,7 @@ export default function Profile() {
     }
   };
 
+React.useEffect(()=>{if(!user){getUserData(token)}},[user])
 
   const formik = useFormik({
     initialValues: {
@@ -111,11 +116,7 @@ export default function Profile() {
     }
   };
 
-  React.useEffect(()=>{
-    if(UpdateUser){
-    getUserData()
-  }
-  })
+
 
 
   const defaultTheme = createTheme({
@@ -132,6 +133,8 @@ export default function Profile() {
       },
     },
   });
+
+  
   
 
   return (
