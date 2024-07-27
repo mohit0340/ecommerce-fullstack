@@ -22,6 +22,8 @@ const Product = () => {
       getProducts();
     }
   }, [product]);
+
+
 useEffect(()=>{
 if(!category){
     CategoryGet()

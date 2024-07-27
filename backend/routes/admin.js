@@ -96,18 +96,22 @@ router.get("/users/:_email", async (req, res) => {
 });
 
 router.put("/",verifyToken,async (req, res) => {
+  const { role, Id } = req.body;
+  console.log(role,Id);
   const {userId}=req.user
   try {
-    const admin= User.findById(userId)
+    const admin= User.findOne({_id:userId})
+    console.log(admin.role)
+
     if(admin?.role=="admin"){
   const { role, Id } = req.body;
   console.log(role);
   const lowercaseName = role.toLowerCase();
  
-    if (!UserId || !role) {
+    if (!userId || !role) {
       return res.status(404).json({ message: "No users found" });
     } else {
-      const users = await User.updateOne({ _id: UserId }, [
+      const users = await User.updateOne({ _id: Id }, [
         { $set: { role: lowercaseName } },
       ]);
       if (users) {

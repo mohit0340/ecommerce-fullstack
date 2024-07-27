@@ -317,7 +317,7 @@ const Context = ({ children }) => {
     }
   };
 
-  const CartUpdatet = async ({userId, productId, quantity, action,message}) => {
+  const CartUpdate = async ({userId, productId, quantity, action,message}) => {
     try {
       let res = await axios.post(
         "http://localhost:5000/api/cart/update",
@@ -364,7 +364,7 @@ const Context = ({ children }) => {
 
   const CategoryAdd=async(name)=>{
     try{
-       const res=await axios.post('http://localhost:5000/api/product/category/add',{name},{
+       const res=await axios.post('http://localhost:5000/api/products/category',{name:name.name},{
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -384,33 +384,6 @@ const Context = ({ children }) => {
     catch (err) {
       toast.error(err.response.data.message)
       console.log(err)
-      return false;
-    }
-  }
-
-  const RemoveCategory=async(id)=>{
-    try{
-      const res=await axios.delete(`http://localhost:5000/api/product/category/remove/${id}`,{
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        
-       })
-       if(res.status==200){
-        toast.success(res.data.message)
-        CategoryGet()
-        return true;
-       }
-       else{
-        toast.error(res.response.data.message)
-        return false;
-       }
-    }
-    catch (err) {
-      console.log(err)
-      toast.error(err.response.data.message)
-    
       return false;
     }
   }
@@ -418,10 +391,7 @@ const Context = ({ children }) => {
 
   const CartData=async(id)=>{
     setProgress(true)
-    console.log(
-      "hii")
       if(user?.role=="user"){
-    
     try {
         let res = await axios.get(`http://localhost:5000/api/cart/${id}`
         //   {
@@ -456,9 +426,9 @@ const Context = ({ children }) => {
    
   }
 
-  const UpdateCategory=async(name,id)=>{
+  const UpdateCategory=async(id,name)=>{
     try{
-       const res=await axios.post('http://localhost:5000/api/product/category/update',{"id":id,"name":name},{
+       const res=await axios.put('http://localhost:5000/api/products/category',{id:id.id,name:name},{
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -497,7 +467,6 @@ const Context = ({ children }) => {
         UpdateCategory,
         setProgress,
         CartData,
-        RemoveCategory,
         setProduct,
         CategoryAdd,
         setUsersData,
@@ -514,7 +483,7 @@ const Context = ({ children }) => {
         AddProducts,
         CheckToken,
         CategoryGet,
-        CartUpdatet,
+        CartUpdate,
       }}
     >
       {children}

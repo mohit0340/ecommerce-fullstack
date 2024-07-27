@@ -220,8 +220,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import Switch from '@mui/material/Switch';
 import Badge from '@mui/material/Badge';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { styled } from '@mui/material/styles';
-
 
 const adminPages = [
   { label: 'Users', path: '/users' },
@@ -241,7 +239,7 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const { user, darkMode,getUserData, setDarkMode, cart,CartData } = useContext(UserContext);
+  const { user, darkMode, getUserData, setDarkMode, cart, CartData } = useContext(UserContext);
 
   const imagePath = user?.avatar?.replace(/\\/g, '/');
 
@@ -266,22 +264,22 @@ function Navbar() {
 
   const getNavPages = () => {
     if (!token) return publicPages;
-    return user.role === 'admin' ? adminPages : userPages;
+    return user?.role === 'admin' ? adminPages : userPages;
   };
 
-
-  useEffect(()=>{
-    if(!user){
-getUserData()
+  useEffect(() => {
+    if (!user) {
+      getUserData(token);
     }
-  },[user])
-  useEffect(()=>{
-    if(!cart){
-      CartData(user._id)
-    }
-  },[cart])
+  }, [user, getUserData, token]);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    if (cart.length === 0 && user) {
+      CartData(user._id);
+    }
+  }, [cart, CartData, user]);
+
+  const handleLogout = () => {
     localStorage.removeItem('token');
     setTimeout(() => {
       navigate('/login');
@@ -392,8 +390,8 @@ getUserData()
                 </IconButton>
               </Tooltip>
             )}
-             {user?.role === 'user' && ( 
-              <Tooltip title={`Total cart Item : ${cart.length}`}>
+            {user?.role === 'user' && (
+              <Tooltip title={`Total cart Item: ${cart.length}`}>
                 <IconButton component={Link} to="/cart" color="inherit">
                   <Badge badgeContent={cart?.length} color="error">
                     <ShoppingCartIcon />
@@ -418,7 +416,7 @@ getUserData()
               onClose={handleCloseUserMenu}
             >
               <MenuItem onClick={handleCloseUserMenu}>
-                <Typography component={Link} to="/profile" textAlign="center">Profile</Typography>
+                <Typography component={Link} to="/profile" sx={{textDecoration:"none",color:"inherit"}} textAlign="center">Profile</Typography>
               </MenuItem>
               <MenuItem onClick={() => { handleCloseUserMenu(); handleLogout(); }}>
                 <Typography textAlign="center">Logout</Typography>

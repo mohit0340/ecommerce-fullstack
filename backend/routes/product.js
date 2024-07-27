@@ -175,65 +175,70 @@ router.get('/', async (req, res) => {
     // Check if name is provided
     if (!name) {
       return res.status(400).json({ message: 'Please provide a name for the category' });
-    } else {
-  
-      // Convert name to lowercase before saving
-      const lowercaseName = name.toLowerCase();
-  
-      try {
-        const existingCategory = await Category.findOne({ name: lowercaseName });
-        if (existingCategory) {
-          return res.status(400).json({ message: 'Category with this name already exists' });
-        } else {
-  
-          const category = new Category({ name: lowercaseName });
-          await category.save();
-  
-          // Use status code 201 for successful creation
-          res.status(200).json({ message: 'Category created successfully', category });
-        }
-      } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Internal server error' });
-      }
     }
-  });
   
-
-  // Update or Delete a category (combined endpoint)
-  router.put('/category/:id', async (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
-  
-    // Check if a request body is provided
-    if (!req.body) {
-      return res.status(400).json({ message: 'Please provide a request body' });
-    }
+    // Convert name to lowercase before saving
+    const lowercaseName = name.toLowerCase();
   
     try {
-      const category = await Category.findById(id);
-      if (!category) {
-        return res.status(404).json({ message: 'Category not found' });
-      }
-      const lowercaseName = name?.toLowerCase();
-      // Update logic
-      if (name) {
-        category.name = name;
-        const existingCategory = await Category.findOne({ name: lowercaseName });
-        if (existingCategory) {
-          return res.status(409).json({ message: 'Category with this name already exists' });
-        }
-        await category.save();
-
-        return res.status(200).json({ message: 'Category updated successfully' });
+      const existingCategory = await Category.findOne({ name: lowercaseName });
+      if (existingCategory) {
+        return res.status(400).json({ message: 'Category with this name already exists' });
       }
   
-      // Delete logic (if no name provided)
-      await category.deleteOne();
-      res.status(200).json({ message: 'Category deleted successfully' });
+      const category = new Category({ name: lowercaseName });
+      await category.save();
+  
+      // Use status code 201 for successful creation
+      res.status(200).json({ message: 'Category created successfully', category });
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  
+  
+
+  // Update or Delete a category (combined endpoint)
+  router.put('/category', async (req, res) => {
+    const { id, name } = req.body;
+  
+    // Check if id is provided
+    if (!id) {
+      return res.status(400).json({ message: 'Please provide the category ID' });
+    }
+  
+    try {
+      // Convert id to ObjectId
+      const objectId = mongoose.Types.ObjectId(id);
+  
+      const category = await Category.findById(objectId);
+      if (!category) {
+        return res.status(404).json({ message: 'Category not found' });
+      }
+  
+      if (name) {
+        // Update logic
+        const lowercaseName = name.toLowerCase();
+  
+        const existingCategory = await Category.findOne({ name: lowercaseName });
+        if (existingCategory && existingCategory._id.toString() !== id) {
+          return res.status(409).json({ message: 'Category with this name already exists' });
+        }
+  
+        category.name = lowercaseName;
+        await category.save();
+        return res.status(200).json({ message: 'Category updated successfully' });
+  
+      } else {
+        // Delete logic
+        await category.deleteOne();
+        return res.status(200).json({ message: 'Category deleted successfully' });
+      }
+  
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' ,err});
     }
   });
 

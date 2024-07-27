@@ -11,7 +11,7 @@ import * as Yup from 'yup';
 
 const ProductCard = ({ product }) => {
   const { productname, image, description, price,_id } = product;
-  const { user, darkMode,UpdateProducts ,category,CategoryGet,DeleteProducts,CartUpdatet,CartData} = useContext(UserContext);
+  const { user, darkMode,UpdateProducts ,category,CategoryGet,DeleteProducts,CartUpdate,CartData} = useContext(UserContext);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [newImage, setNewImage] = useState(null);
@@ -52,7 +52,7 @@ useEffect(()=>{
 
 
 const HandleAddToCart=()=>{
-const  data = CartUpdatet({userId:user?._id, productId:_id, quantity:1, action:"add",message:"Item Added to cart Successfully"})
+const  data = CartUpdate({userId:user?._id, productId:_id, quantity:1, action:"add",message:"Item Added to cart Successfully"})
  if(data){
   CartData(user._id)
  } 
