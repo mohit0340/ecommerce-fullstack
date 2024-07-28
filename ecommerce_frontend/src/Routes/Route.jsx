@@ -90,7 +90,7 @@ const AppRoutes = () => {
       <Route path="/product/add" element={<PrivateRoute Component={ProductAdd} roles={['admin']} />} />
       <Route path="/category/add" element={<PrivateRoute Component={CategoryAdd} roles={['admin']} />} />
       <Route path="/users" element={<PrivateRoute Component={Users} roles={['admin']} />} />
-      <Route path="/product/:id" element={<PrivateRoute Component={ProductDetail} roles={['user']} />} />
+      <Route path="/product/:category/:productId" element={<PrivateRoute Component={ProductDetail} roles={['user']} />} />
     </Routes>
   );
 };

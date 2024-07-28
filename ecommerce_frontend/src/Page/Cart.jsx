@@ -32,10 +32,10 @@ const Cart = () => {
   }, [user, token]);
 
   useEffect(() => {
-    if (user) {
+    if (!cart) {
       CartData(user._id);
     }
-  }, [user]);
+  }, [cart]);
 
   useEffect(() => {
     calculateSubtotal();
@@ -87,7 +87,7 @@ const Cart = () => {
                   <Card sx={{backgroundColor: darkMode ? "#404040" : "inherit", color: darkMode ? "#E2DFD0" : "inherit" }}>
                     <CardMedia
                       component="img"
-                      height="60%"
+                      height="300px"
                       image={`http://localhost:5000/${getImagePath(item.product.image)}`}
                       alt={item.product.productname}
                     />

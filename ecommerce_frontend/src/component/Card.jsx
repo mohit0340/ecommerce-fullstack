@@ -61,10 +61,11 @@ useEffect(()=>{
 },[category])
 
 
-const HandleAddToCart=async()=>{
+const HandleAddToCart=async(e)=>{
+  e.stopPropagation()
 await CartUpdate({userId:user?._id, productId:_id, quantity:1, action:"add",message:"Item Added to cart Successfully"})
 
- return CartData(user._id)``
+ return CartData(user._id)
  
 }
 
@@ -80,7 +81,7 @@ color: darkMode ? "#E2DFD0" : "black",
   return (
     <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: { xs: 'row', md: 'row'}, backgroundColor: darkMode ? "#404040" : "inherit", color: darkMode ? "#E2DFD0" : "inherit"  }} >
       <CardActionArea disableRipple onClick={()=>{if(user?.role=="user"){
-        navigate(`/product/${_id}`)
+        navigate(`/product/${product.category}/${_id}`)
       }}}>
         <CardMedia
           component="img"
@@ -106,14 +107,17 @@ color: darkMode ? "#E2DFD0" : "black",
                 <IconButton size={'large'} color='primary' onClick={handleEditOpen}><EditRoundedIcon /></IconButton>
                 <IconButton color='error' onClick={handleDeleteOpen}><DeleteForeverRoundedIcon /></IconButton>
               </> :
-              <Button variant='contained' onClick={()=>HandleAddToCart()}>Add to Cart</Button>}
+              <Button variant='contained' onClick={(e)=>HandleAddToCart(e)}>Add to Cart</Button>}
           </Typography>
         </Typography>
       </CardActionArea>
 
       {/* Edit Modal */}
       <Modal  open={editModalOpen} onClose={handleEditClose}>
-        <Box sx={[editmodalstyle,{ position: 'absolute', top: '50%', left: '50%', height:"90vh",overflow:"scroll",transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }]}>
+        <Box sx={[editmodalstyle,{ position: 'absolute', top: '50%', left: '50%', height:"90vh",overflow:"scroll",transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 ,  backgroundImage: darkMode
+              ? "linear-gradient(71deg, #181818,#404040,#181818)"
+              : "linear-gradient(to right, #A7E6FF , white, #A7E6FF)",
+            color: darkMode ? "#E2DFD0" : "black",}]}>
           <Typography variant="h6" component="h2">Edit Product</Typography>
           <Formik
             initialValues={{ productname, category: product.category, price, description }}
@@ -137,7 +141,16 @@ color: darkMode ? "#E2DFD0" : "black",
           >
             {({ errors, touched, setFieldValue,handleChange,handleBlur,values }) => (
               <Form>
-                <Field as={TextField} name="productname" label="Product Name" fullWidth margin="normal" error={touched.productname && !!errors.productname} helperText={touched.productname && errors.productname} />
+                <Field as={TextField} name="productname"   sx={{
+                     
+                     "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                     "& .MuiOutlinedInput-notchedOutline": {
+                       borderColor: darkMode ? "#E2DFD0" : "",
+                     },
+                     "& .MuiInputLabel-root": {
+                       color: darkMode ? "#E2DFD0" : "",
+                     }, marginBottom:"20px"
+                   }}  label="Product Name" fullWidth margin="normal" error={touched.productname && !!errors.productname} helperText={touched.productname && errors.productname} />
                 <TextField
                       required
                       select
@@ -168,8 +181,27 @@ color: darkMode ? "#E2DFD0" : "black",
                           </MenuItem>
                         ))}
                     </TextField>
-                <Field as={TextField} name="price" label="Price" type="number" fullWidth margin="normal" error={touched.price && !!errors.price} helperText={touched.price && errors.price} />
-                <Field as={TextField} name="description" label="Description" fullWidth margin="normal" error={touched.description && !!errors.description} helperText={touched.description && errors.description} />
+                <Field as={TextField} name="price" label="Price" type="number"   sx={{
+                     
+                     "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                     "& .MuiOutlinedInput-notchedOutline": {
+                       borderColor: darkMode ? "#E2DFD0" : "",
+                     },
+                     "& .MuiInputLabel-root": {
+                       color: darkMode ? "#E2DFD0" : "",
+                     },
+                    
+                   }} fullWidth margin="normal" error={touched.price && !!errors.price} helperText={touched.price && errors.price} />
+                <Field as={TextField} name="description"   sx={{
+                     
+                     "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                     "& .MuiOutlinedInput-notchedOutline": {
+                       borderColor: darkMode ? "#E2DFD0" : "",
+                     },
+                     "& .MuiInputLabel-root": {
+                       color: darkMode ? "#E2DFD0" : "",
+                     },
+                   }} label="Description" fullWidth margin="normal" error={touched.description && !!errors.description} helperText={touched.description && errors.description} />
                 <Button
                   variant="contained"
                   component="label"
@@ -202,7 +234,10 @@ color: darkMode ? "#E2DFD0" : "black",
 
       {/* Delete Confirmation Modal */}
       <Modal open={deleteModalOpen} onClose={handleDeleteClose}>
-        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4 }}>
+        <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', border: '2px solid #000', boxShadow: 24, p: 4,  backgroundImage: darkMode
+              ? "linear-gradient(71deg, #181818,#404040,#181818)"
+              : "linear-gradient(to right, #A7E6FF , white, #A7E6FF)",
+            color: darkMode ? "#E2DFD0" : "black", }}>
           <Typography variant="h6" component="h2">Delete Product</Typography>
           <Typography sx={{ mt: 2 }}>Are you sure you want to delete this product?</Typography>
           <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>

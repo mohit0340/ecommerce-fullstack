@@ -268,7 +268,7 @@ function Navbar() {
   };
 
   useEffect(() => {
-    if (!user&&token) {
+    if (!user) {
       getUserData(token);
     }
   }, [!user, getUserData, token]);
@@ -379,12 +379,13 @@ function Navbar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+          <Tooltip title={darkMode?'Dark Mode':"Light Mode"}>
             <Switch
               checked={darkMode}
               onChange={toggleDarkMode}
-              color="default"
+              color="secondary"
               inputProps={{ 'aria-label': 'toggle dark mode' }}
-            />
+            /></Tooltip>
             {user.length!=0 && (
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
