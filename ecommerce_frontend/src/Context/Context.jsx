@@ -80,10 +80,10 @@ const Context = ({ children }) => {
         "http://localhost:5000/api/users/login",
         values
       );
-      if (res.status === 200) {
+      if (res.status == 200) {
         toast.success(res.data.message);
         localStorage.setItem("token", res.data.token);
-        getUserData(res.data.token);
+        getUserData();
    return true;
      
       } else {
@@ -127,35 +127,30 @@ const Context = ({ children }) => {
   };
   
 
-  const getProducts = async (categoryval,searchterm) => {
-    setProgress(true)
-    
-    try {
-    
-      let res = await axios.get(`http://localhost:5000/api/products/`,{ params: {
-        "category":categoryval,
-        "searchTerm":searchterm
-      }});
+  const getProducts = async (categoryval = '', searchterm = '') => {
+    setProgress(true);
   
-      if (res.status == 200) {
-        
-          setProgress(false)
-          //   toast.success(res.data.message);
-          setProduct(res.data.products);
-    
-    
+    try {
+      let res = await axios.get('http://localhost:5000/api/products/', {
+        params: {
+          category: categoryval !== 'all' ? categoryval : '', // Default to empty if 'all'
+          searchTerm: searchterm
+        }
+      });
 
+ 
+      if (res.status === 200) {
+        setProgress(false);
+        setProduct(res.data.products);
         console.log(res);
         return true;
-      }
-      else{
-        setProgress(false)
+      } else {
+        setProgress(false);
         return false;
       }
     } catch (err) {
-      // toast.error(err.response.data.message);
       console.log(err);
-      setProgress(false)
+      setProgress(false);
       return false;
     }
   };
@@ -292,32 +287,35 @@ const Context = ({ children }) => {
     }
   };
 
-  const getUsersData = async () => {
+  const getUsersData = async (searchTerm = '') => {
     try {
       const res = await axios.get("http://localhost:5000/api/admin/users", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        params: {
+          search: searchTerm,
+        },
       });
-
+  
       if (res.status === 200) {
-   
-        setUsersData(res.data.data)
+        setUsersData(res.data.data);
         return true;
       } else {
-        setUsersData("")
+        setUsersData([]);
         console.log(res);
         return false;
       }
     } catch (err) {
-      setUsersData("")
+      setUsersData([]);
       console.error(err);
       return false;
     }
   };
+  
 
-  const CartUpdate = async ({userId, productId, quantity, action,message}) => {
+  const CartUpdate = async ({userId, productId, quantity, action, message}) => {
     try {
       let res = await axios.post(
         "http://localhost:5000/api/cart/update",
@@ -426,11 +424,12 @@ const Context = ({ children }) => {
    
   }
 
-  const UpdateCategory=async(id,name)=>{
+  const UpdateCategory=async(data)=>{
+  
     try{
-       const res=await axios.put('http://localhost:5000/api/products/category',{id:id.id,name:name},{
+       const res=await axios.put('http://localhost:5000/api/products/category/update',{id:data.id,name:data.name},{
         headers: {
-          "Content-Type": "application/json",
+          // "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
         

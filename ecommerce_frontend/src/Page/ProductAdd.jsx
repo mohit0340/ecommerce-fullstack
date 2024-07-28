@@ -49,7 +49,7 @@ export default function ProductAdd() {
 
   const handleAddProduct = async (values) => {
     const formData = new FormData();
-    formData.append('productName', values.productName);
+    formData.append('productname', values.productName);
     formData.append('category', values.category);
     formData.append('price', values.price);
     formData.append('description', values.description);

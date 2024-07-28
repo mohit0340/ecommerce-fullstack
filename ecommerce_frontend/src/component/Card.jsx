@@ -5,18 +5,20 @@ import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteForeverRoundedIcon from '@mui/icons-material/DeleteForeverRounded';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { useNavigate } from 'react-router-dom';
 
 
 
 
 const ProductCard = ({ product }) => {
   const { productname, image, description, price,_id } = product;
-  const { user, darkMode,UpdateProducts ,category,CategoryGet,DeleteProducts,CartUpdate,CartData} = useContext(UserContext);
+  const { user,getUserData, darkMode,UpdateProducts ,category,CategoryGet,DeleteProducts,CartUpdate,CartData} = useContext(UserContext);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [newImage, setNewImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(`http://localhost:5000/${image.replace(/\\/g, '/')}`);
   const imagePath = image.replace(/\\/g, '/');
+  const navigate=useNavigate()
 
   const handleEditOpen = () => setEditModalOpen(true);
   const handleEditClose = () => setEditModalOpen(false);
@@ -43,19 +45,27 @@ const ProductCard = ({ product }) => {
     description: Yup.string().required('Description is required'),
   });
 
+
+  useEffect(()=>{
+    if(!user){
+      getUserData()
+    }
+  
+  },[user])
+
 useEffect(()=>{
   if(!category){
     CategoryGet()
   }
 
-},[!category])
+},[category])
 
 
-const HandleAddToCart=()=>{
-const  data = CartUpdate({userId:user?._id, productId:_id, quantity:1, action:"add",message:"Item Added to cart Successfully"})
- if(data){
-  CartData(user._id)
- } 
+const HandleAddToCart=async()=>{
+await CartUpdate({userId:user?._id, productId:_id, quantity:1, action:"add",message:"Item Added to cart Successfully"})
+
+ return CartData(user._id)``
+ 
 }
 
 
@@ -68,12 +78,13 @@ color: darkMode ? "#E2DFD0" : "black",
 
 
   return (
-    <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: { xs: 'row', md: 'row', backgroundColor: darkMode ? "#404040" : "inherit", color: darkMode ? "#E2DFD0" : "inherit" } }}>
-      <CardActionArea disableRipple>
+    <Card sx={{ maxWidth: 345, display: 'flex', flexDirection: { xs: 'row', md: 'row'}, backgroundColor: darkMode ? "#404040" : "inherit", color: darkMode ? "#E2DFD0" : "inherit"  }} >
+      <CardActionArea disableRipple onClick={()=>{if(user?.role=="user"){
+        navigate(`/product/${_id}`)
+      }}}>
         <CardMedia
           component="img"
-          height="140"
-          
+          height="150"
           image={`http://localhost:5000/${imagePath}`}
           alt={productname}
           sx={{objectFit:"contain"}}

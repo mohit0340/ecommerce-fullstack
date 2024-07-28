@@ -32,102 +32,149 @@ const authenticate = (req, res, next) => {
 };
 
 // Route to fetch all users
+// router.get("/users", authenticate, async (req, res) => {
+//   try {
+//     const userId = req.user;
+//     // Find the cart for the user
+    
+//     let userrole = await User.findById(userId.userId);
+
+//     if (userrole.role && userrole.role == "admin") {
+//       const users = await User.find();
+
+//       if (users.length > 0) {
+//         res
+//           .status(200)
+//           .json({ message: "Users fetched successfully", data: users });
+//       } else {
+//         res.status(404).json({ message: "No users found" });
+//       }
+//     } else {
+//       res
+//         .status(404)
+//         .json({ message: "Sorry You unauthorised For this requeste" });
+//     }
+//   } catch (err) {
+//     console.error(err); // Log the error for debugging
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
+// router.get("/users/:_email", async (req, res) => {
+//   const { _email } = req.params;
+
+//   const param = String(_email);
+//   try {
+//     const users = await User.aggregate([
+//       {
+//         $match: {
+//           $or: [
+//             { firstname: { $regex: param, $options: "i" } },
+//             { lastname: { $regex: param, $options: "i" } },
+//             { email: { $regex: param, $options: "i" } },
+//           ],
+//         },
+//       },
+//       {
+//         $sort: {
+//           email: 1,
+//           firstname: 1,
+//           lastname: 1,
+//         },
+//       },
+//     ]);
+
+//     if (users.length === 0) {
+//       return res.status(404).json({ message: "No users found" });
+//     }
+
+//     res.status(200).json({ message: "Users retrieved successfully", users });
+//   } catch (err) {
+//     console.error(err); // Log the error for debugging
+//     res.status(500).json({ message: "Server error" });
+//   }
+// });
+
 router.get("/users", authenticate, async (req, res) => {
   try {
-    const userId = req.user;
-    // Find the cart for the user
-    
-    let userrole = await User.findById(userId.userId);
+    const userId = req.user.userId;
+    const userRole = await User.findById(userId);
 
-    if (userrole.role && userrole.role == "admin") {
-      const users = await User.find();
+    if (userRole && userRole.role === "admin") {
+      const { search } = req.query;
 
-      if (users.length > 0) {
-        res
-          .status(200)
-          .json({ message: "Users fetched successfully", data: users });
-      } else {
-        res.status(404).json({ message: "No users found" });
-      }
-    } else {
-      res
-        .status(404)
-        .json({ message: "Sorry You unauthorised For this requeste" });
-    }
-  } catch (err) {
-    console.error(err); // Log the error for debugging
-    res.status(500).json({ message: "Server error" });
-  }
-});
+      let matchStage = {};
 
-router.get("/users/:_email", async (req, res) => {
-  const { _email } = req.params;
-
-  const param = String(_email);
-  try {
-    const users = await User.aggregate([
-      {
-        $match: {
+      if (search) {
+        const param = String(search);
+        matchStage = {
           $or: [
             { firstname: { $regex: param, $options: "i" } },
             { lastname: { $regex: param, $options: "i" } },
             { email: { $regex: param, $options: "i" } },
           ],
-        },
-      },
-      {
-        $sort: {
-          email: 1,
-          firstname: 1,
-          lastname: 1,
-        },
-      },
-    ]);
-
-    if (users.length === 0) {
-      return res.status(404).json({ message: "No users found" });
-    }
-
-    res.status(200).json({ message: "Users retrieved successfully", users });
-  } catch (err) {
-    console.error(err); // Log the error for debugging
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
-router.put("/",verifyToken,async (req, res) => {
-  const { role, Id } = req.body;
-  console.log(role,Id);
-  const {userId}=req.user
-  try {
-    const admin= User.findOne({_id:userId})
-    console.log(admin.role)
-
-    if(admin?.role=="admin"){
-  const { role, Id } = req.body;
-  console.log(role);
-  const lowercaseName = role.toLowerCase();
- 
-    if (!userId || !role) {
-      return res.status(404).json({ message: "No users found" });
-    } else {
-      const users = await User.updateOne({ _id: Id }, [
-        { $set: { role: lowercaseName } },
-      ]);
-      if (users) {
-        res
-          .status(200)
-          .json({ message: "User Role Updated successfully", users });
+        };
       }
-    }}
-    else{
-      res.status(401).json('You have not authority for update role')
+
+      const users = await User.aggregate([
+        { $match: matchStage },
+        {
+          $sort: {
+            email: 1,
+            firstname: 1,
+            lastname: 1,
+          },
+        },
+      ]);
+
+      if (users.length > 0) {
+        res.status(200).json({ message: "Users fetched successfully", data: users });
+      } else {
+        res.status(404).json({ message: "No users found" });
+      }
+    } else {
+      res.status(403).json({ message: "Unauthorized request" });
     }
   } catch (err) {
     console.error(err); // Log the error for debugging
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+
+router.put("/", verifyToken, async (req, res) => {
+  const { role, Id } = req.body;
+
+  const { userId } = req.user;
+  
+  try {
+    const admin = await User.findOne({ _id: userId });
+   
+
+    if (admin?.role === "admin") {
+      const lowercaseRole = role.toLowerCase();
+      
+      if (!userId || !role) {
+        return res.status(404).json({ message: "No users found" });
+      } else {
+        const users = await User.updateOne({ _id: Id }, { $set: { role: lowercaseRole } });
+        
+        if (users) {
+          res.status(200).json({ message: "User Role Updated successfully" });
+        } else {
+          res.status(404).json({ message: "User not found or role not updated" });
+        }
+      }
+    } else {
+      res.status(401).json('You do not have the authority to update roles');
+    }
+  } catch (err) {
+    console.error(err); // Log the error for debugging
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 
 

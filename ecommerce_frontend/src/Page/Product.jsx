@@ -33,19 +33,17 @@ if(!category){
 
 
 
-  const handleCategoryChange = (event) => {
-    console.log(event.target.value)
-    setSearchTerm('');
-    getProducts(event.target.value=="all"?"":event.target.value)
-    setSelectedCategory(event.target.value);
-  };
+const handleCategoryChange = (event) => {
+  setSearchTerm('');
+  getProducts(event.target.value, '');
+  setSelectedCategory(event.target.value);
+};
 
-
-    const handleSearchChange = (event) => {
-      const searchValue = event.target.value;
-      setSearchTerm(searchValue);
-      getProducts(selectedCategory, event.target.value);
-    };
+const handleSearchChange = (event) => {
+  const searchValue = event.target.value;
+  setSearchTerm(searchValue);
+  getProducts(selectedCategory, searchValue);
+};
   
 
 
@@ -75,7 +73,7 @@ if(!category){
             <FormControl sx={{ minWidth: 120 }} size="small">
               {/* <InputLabel id="category-select-label" sx={{ color: darkMode ? "#E2DFD0" : "" }}>Category</InputLabel> */}
               <Select
-                labelId="category-select-label"
+                // labelId="category-select-label"
                 value={selectedCategory}
                 onChange={(e)=>handleCategoryChange(e)}
                 sx={{
@@ -85,7 +83,7 @@ if(!category){
                   "& .MuiInputLabel-root": {
                     color: darkMode ? "#E2DFD0" : "",
                   },
-                }}
+                color:"inherit"}}
               >
                 <MenuItem value="all"defaultChecked={true} ><em>All</em></MenuItem>
                 {category && category?.map((option) => (

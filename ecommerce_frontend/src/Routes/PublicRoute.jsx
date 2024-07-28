@@ -75,11 +75,7 @@ const PublicRoute = ({ Component }) => {
     return null; // or a loading spinner if you prefer
   }
 
-  if (token && user) {
-    return <Navigate to="/" />;
-  }
-
-  return <Component />;
+  return !token || !user ? <Component /> : <Navigate to="/" />;
 };
 
 export default PublicRoute;

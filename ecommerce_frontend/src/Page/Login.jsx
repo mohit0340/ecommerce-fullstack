@@ -43,13 +43,14 @@ export default function Login() {
   const navigate = useNavigate();
   const { status, error, token } = useSelector((state) => state.user);
 
-  const {  UserLogin,darkMode } = React.useContext(UserContext);
+  const {  UserLogin,darkMode,getUserData } = React.useContext(UserContext);
 
   const HandleLogin = async (values) => {
     try {
       let data = await UserLogin(values);
       if (data) {
         // navigate('/')
+         
         setTimeout(() => {
           navigate("/");
         }, 300);

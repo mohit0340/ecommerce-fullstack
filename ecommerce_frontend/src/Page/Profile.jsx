@@ -61,7 +61,7 @@ export default function Profile() {
   const { user, UpdateUser, getUserData,darkMode } = React.useContext(UserContext);
 
   const imagePath = user?.avatar?.replace(/\\/g, '/');
-  console.log(user);
+ 
 const token=localStorage.getItem('token')
  
 
@@ -87,7 +87,7 @@ const token=localStorage.getItem('token')
     }
   };
 
-React.useEffect(()=>{if(!user){getUserData(token)}},[user])
+React.useEffect(()=>{if(!user){getUserData()}},[user])
 
   const formik = useFormik({
     initialValues: {

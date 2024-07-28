@@ -227,7 +227,7 @@ const adminPages = [
   { label: 'Add Product', path: '/product/add' },
 ];
 const userPages = [
-  { label: 'Cart', path: '/cart' },
+  {  },
 ];
 const publicPages = [
   { label: 'Login', path: '/login' },
@@ -239,7 +239,7 @@ function Navbar() {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  const { user, darkMode, getUserData, setDarkMode, cart, CartData } = useContext(UserContext);
+  const { user, darkMode,setUser, getUserData, setDarkMode, cart, CartData } = useContext(UserContext);
 
   const imagePath = user?.avatar?.replace(/\\/g, '/');
 
@@ -268,20 +268,22 @@ function Navbar() {
   };
 
   useEffect(() => {
-    if (!user) {
+    if (!user&&token) {
       getUserData(token);
     }
-  }, [user, getUserData, token]);
+  }, [!user, getUserData, token]);
 
   useEffect(() => {
-    if (cart.length === 0 && user) {
+    if (!cart && user) {
       CartData(user._id);
     }
   }, [cart, CartData, user]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
+   
     setTimeout(() => {
+      setUser([])
       navigate('/login');
     }, 500);
   };
@@ -383,7 +385,7 @@ function Navbar() {
               color="default"
               inputProps={{ 'aria-label': 'toggle dark mode' }}
             />
-            {user && (
+            {user.length!=0 && (
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="User Avatar" src={`http://localhost:5000/${imagePath}`} />

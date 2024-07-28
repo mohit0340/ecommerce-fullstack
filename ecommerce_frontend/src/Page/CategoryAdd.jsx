@@ -54,7 +54,7 @@ const CategoryAdd = () => {
 
   const handleCategorySubmit = async (values, { resetForm }) => {
     if (selectedCategory) {
-      await UpdateCategory({ id: selectedCategory._id, name: values.categoryName });
+      await UpdateCategory({ id: selectedCategory.id, name: values.categoryName });
       setSelectedCategory(null);
     } else {
       await CategoryAdd({ name: values.categoryName });
@@ -63,8 +63,8 @@ const CategoryAdd = () => {
     resetForm();
   };
 
-  const handleEditCategory = (category) => {
-    setSelectedCategory(category);
+  const handleEditCategory = (id,name) => {
+    setSelectedCategory({id:id,name:name});
   };
 
   const handleDeleteCategory = async (id) => {
@@ -82,10 +82,11 @@ const CategoryAdd = () => {
           enableReinitialize
           validationSchema={validationSchema}
           onSubmit={handleCategorySubmit}
+        
         >
-          {({ errors, touched }) => (
-            <Form style={{ display: "flex", justifyContent: "center" }}>
-              <Box display="flex" alignItems="center" mb={3} mt={3} sx={{ width: "50%", justifyContent: "center", height: "40px" }}>
+          {({ errors, touched,resetForm,values }) => (
+            <Form style={{ display: "flex", justifyContent: "center"}}>
+              <Box display="flex" alignItems="center" mb={4} mt={3} sx={{ width: "50%", justifyContent: "center", flexDirection:"column" }}>
                 <Field
                   as={TextField}
                   name="categoryName"
@@ -94,11 +95,26 @@ const CategoryAdd = () => {
                   fullWidth
                   error={touched.categoryName && !!errors.categoryName}
                   helperText={touched.categoryName && errors.categoryName}
-                  sx={{ mr: 2 }}
+                  sx={{
+                     
+                    "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                    "& .MuiOutlinedInput-notchedOutline": {
+                      borderColor: darkMode ? "#E2DFD0" : "",
+                    },
+                    "& .MuiInputLabel-root": {
+                      color: darkMode ? "#E2DFD0" : "",
+                    },
+                  }}
+                  
                 />
+                <Typography component={'div'} sx={{mt:'20px',display:"flex",gap:"20px"}}>
                 <Button variant="contained" color="primary" sx={{ height: "100%" }} type="submit">
                   {selectedCategory ? 'Update' : 'Add'}
                 </Button>
+                <Button  variant="contained" onClick={()=>{setSelectedCategory('')}} color="error" sx={{ height: "100%" }} type="reset">
+                 reset
+                </Button>
+                </Typography>
               </Box>
             </Form>
           )}
@@ -118,7 +134,7 @@ const CategoryAdd = () => {
                     {cat.name}
                   </TableCell>
                   <TableCell align="right">
-                    <IconButton color="primary" onClick={() => handleEditCategory(cat)}>
+                    <IconButton color="primary" onClick={() => handleEditCategory(cat._id,cat.name)}>
                       <EditIcon />
                     </IconButton>
                     <IconButton color="error" onClick={() => handleDeleteCategory(cat._id)}>
