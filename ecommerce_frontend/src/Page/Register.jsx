@@ -20,7 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 
 
 
-const defaultTheme = createTheme();
+
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().min(3, 'First name must be at least 3 characters').required('First name is required'),
@@ -59,6 +59,24 @@ export default function Register() {
     navigate('/login')
  }
   };
+
+
+
+
+  const defaultTheme = createTheme({
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            backgroundImage: darkMode
+              ? "linear-gradient(71deg, #181818,#404040,#181818)"
+              : "linear-gradient(to right, #A7E6FF , white, #A7E6FF)",
+            color: darkMode ? "#E2DFD0" : "black",
+          },
+        },
+      },
+    },
+  });
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -101,6 +119,16 @@ export default function Register() {
                       fullWidth
                       id="firstName"
                       label="First Name"
+                      sx={{
+                     
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        }
+                      }}
                       autoFocus
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -117,6 +145,16 @@ export default function Register() {
                       label="Last Name"
                       name="lastName"
                       autoComplete="family-name"
+                      sx={{
+                     
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        }
+                      }}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.lastName}
@@ -132,6 +170,16 @@ export default function Register() {
                       label="Email Address"
                       name="email"
                       autoComplete="email"
+                      sx={{
+                     
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        }
+                      }}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.email}
@@ -146,18 +194,20 @@ export default function Register() {
                       fullWidth
                       name="password"
                       label="Password"
-                      type={visible ? "text" : "password"}
-                      id="password"
-                      autoComplete="current-password"
                       sx={{
+                     
                         "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
                         "& .MuiOutlinedInput-notchedOutline": {
                           borderColor: darkMode ? "#E2DFD0" : "",
                         },
                         "& .MuiInputLabel-root": {
                           color: darkMode ? "#E2DFD0" : "",
-                        },
+                        }
                       }}
+                      type={visible ? "text" : "password"}
+                      id="password"
+                      autoComplete="current-password"
+                      
                       value={values.password}
                       onChange={handleChange}
                       error={touched.password && Boolean(errors.password)}
@@ -170,9 +220,21 @@ export default function Register() {
                               onClick={handleShowPassword}
                             >
                               {visible ? (
-                                <VisibilityIcon sx={{ color: darkMode ? "#E2DFD0" : "" }} />
+                                <VisibilityIcon sx={{   "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: darkMode ? "#E2DFD0" : "",
+                                },
+                                "& .MuiInputLabel-root": {
+                                  color: darkMode ? "#E2DFD0" : "",
+                                },}} />
                               ) : (
-                                <VisibilityOffIcon sx={{ color: darkMode ? "#E2DFD0" : "" }} />
+                                <VisibilityOffIcon sx={{   "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                                "& .MuiOutlinedInput-notchedOutline": {
+                                  borderColor: darkMode ? "#E2DFD0" : "",
+                                },
+                                "& .MuiInputLabel-root": {
+                                  color: darkMode ? "#E2DFD0" : "",
+                                },}} />
                               )}
                             </IconButton>
                           </InputAdornment>
@@ -189,6 +251,16 @@ export default function Register() {
                       name="mobile"
                       type="number"
                       autoComplete="tel"
+                      sx={{
+                     
+                        "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          borderColor: darkMode ? "#E2DFD0" : "",
+                        },
+                        "& .MuiInputLabel-root": {
+                          color: darkMode ? "#E2DFD0" : "",
+                        }
+                      }}
                       onChange={handleChange}
                       onBlur={handleBlur}
                       value={values.mobile}

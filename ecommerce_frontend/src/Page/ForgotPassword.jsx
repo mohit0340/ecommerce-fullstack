@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -6,6 +6,9 @@ import {
   Typography,
   Container,
   styled,
+  createTheme,
+  ThemeProvider,
+  CssBaseline,
 } from "@mui/material";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { MuiOtpInput } from 'mui-one-time-password-input'
@@ -13,11 +16,15 @@ import * as Yup from "yup";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../Context/Context";
+
 
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(0);
   const [email, setEmail] = useState('');
+  
+  const {darkMode}=useContext(UserContext)
   const navigate=useNavigate()
 
   const sendOTP = async (values, { setSubmitting, setErrors }) => {
@@ -59,7 +66,26 @@ const ForgotPassword = () => {
     }
   };
 
+  const defaultTheme = createTheme({
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            backgroundImage: darkMode
+              ? "linear-gradient(71deg, #181818,#404040,#181818)"
+              : "linear-gradient(to right, #A7E6FF , white, #A7E6FF)",
+            color: darkMode ? "#E2DFD0" : "black",
+          },
+        },
+      },
+    },
+  });
+
   return (
+    <ThemeProvider theme={defaultTheme}>
+      <CssBaseline></CssBaseline>
+
+   
     <Container sx={{ marginY: "30px" }}>
       <Typography variant="h4">Forgot Password</Typography>
       <Typography component={'div'} sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -83,7 +109,18 @@ const ForgotPassword = () => {
                     label="Email Address"
                     fullWidth
                     variant="outlined"
-                    helperText={<ErrorMessage name="email" />}
+                    
+                    helperText={<ErrorMessage style={{ color: 'red' }} name="email" />}
+                    sx={{
+                     
+                      "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: darkMode ? "#E2DFD0" : "",
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: darkMode ? "#E2DFD0" : "",
+                      }
+                    }}
                   />
                 </Box>
                 <Button
@@ -118,6 +155,16 @@ const ForgotPassword = () => {
                     value={values.otp}
                     onChange={(value) => setFieldValue("otp", value)}
                     length={4}
+                    sx={{
+                     
+                      "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: darkMode ? "#E2DFD0" : "",
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: darkMode ? "#E2DFD0" : "",
+                      }
+                    }}
                     width={'300px'}
                     separator={<span>-</span>}
                   />
@@ -130,6 +177,16 @@ const ForgotPassword = () => {
                     type="password"
                     label="New Password"
                     fullWidth
+                    sx={{
+                     
+                      "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: darkMode ? "#E2DFD0" : "",
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: darkMode ? "#E2DFD0" : "",
+                      }
+                    }}
                     variant="outlined"
                   />
                   <ErrorMessage name="newpassword" component="div" style={{ color: 'red' }} />
@@ -141,6 +198,16 @@ const ForgotPassword = () => {
                     type="password"
                     label="Confirm New Password"
                     fullWidth
+                    sx={{
+                     
+                      "& .MuiInputBase-root": { height: "50px", color: darkMode ? "#E2DFD0" : "" },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: darkMode ? "#E2DFD0" : "",
+                      },
+                      "& .MuiInputLabel-root": {
+                        color: darkMode ? "#E2DFD0" : "",
+                      }
+                    }}
                     variant="outlined"
                   />
                   <ErrorMessage name="confirmnewpassword" component="div" style={{ color: 'red' }} />
@@ -169,6 +236,7 @@ const ForgotPassword = () => {
         )}
       </Typography>
     </Container>
+    </ThemeProvider>
   );
 };
 
