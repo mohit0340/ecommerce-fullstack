@@ -19,6 +19,7 @@ const Context = ({ children }) => {
   const [usersData, setUsersData] = useState("");
   const [category,setCategory]=useState('')
 
+
   const token = localStorage.getItem("token");
   const dispatch=useDispatch()
 
@@ -27,7 +28,7 @@ const Context = ({ children }) => {
     try {
       if (token) {
         const res = await axios.get(
-          "http://localhost:5000/api/auth/checktoken",
+          "https://ecommerce-fullstack-zfpe.onrender.com/api/auth/checktoken",
           {
             headers: {
               Authorization: `${token}`,
@@ -51,7 +52,7 @@ const Context = ({ children }) => {
     setProgress(true)
     try {
       if (token) {
-        const res = await axios.get("http://localhost:5000/api/users/protected", {
+        const res = await axios.get("https://ecommerce-fullstack-zfpe.onrender.com/api/users/protected", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -77,7 +78,7 @@ const Context = ({ children }) => {
   const UserLogin = async (values) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/users/login",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/users/login",
         values
       );
       if (res.status == 200) {
@@ -102,7 +103,7 @@ const Context = ({ children }) => {
   const UserRegister = async (formData) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/users/register",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/users/register",
         formData,
         {
           headers: {
@@ -131,7 +132,7 @@ const Context = ({ children }) => {
     setProgress(true);
   
     try {
-      let res = await axios.get('http://localhost:5000/api/products/', {
+      let res = await axios.get('https://ecommerce-fullstack-zfpe.onrender.com/api/products/', {
         params: {
           category: categoryval !== 'all' ? categoryval : '', // Default to empty if 'all'
           searchTerm: searchterm
@@ -159,7 +160,7 @@ const Context = ({ children }) => {
     try {
 
       let res = await axios.post(
-        "http://localhost:5000/api/products/add",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/products/add",
         formData,
         {
           headers: {
@@ -186,7 +187,7 @@ const Context = ({ children }) => {
     try {
 
       let res = await axios.delete(
-        `http://localhost:5000/api/products/${id}`
+        `https://ecommerce-fullstack-zfpe.onrender.com/api/products/${id}`
       );
       if (res.status == 200) {
         toast.success(res.data.message);
@@ -207,7 +208,7 @@ const Context = ({ children }) => {
     try {
 
       let res = await axios.put(
-        `http://localhost:5000/api/products/${id}`,
+        `https://ecommerce-fullstack-zfpe.onrender.com/api/products/${id}`,
         formData,
         {
           headers: {
@@ -233,7 +234,7 @@ const Context = ({ children }) => {
   const UpdateUser = async (id,formData) => {
     try {
       const res = await axios.put(
-        `http://localhost:5000/api/users/update/${id}`,
+        `https://ecommerce-fullstack-zfpe.onrender.com/api/users/update/${id}`,
         formData,
         {
           headers: {
@@ -262,7 +263,7 @@ const Context = ({ children }) => {
   const UpdateUserRole = async (role, UserId) => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/admin",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/admin",
         {role:role,Id:UserId},
         {
           headers: {
@@ -289,7 +290,7 @@ const Context = ({ children }) => {
 
   const getUsersData = async (searchTerm = '') => {
     try {
-      const res = await axios.get("http://localhost:5000/api/admin/users", {
+      const res = await axios.get("https://ecommerce-fullstack-zfpe.onrender.com/api/admin/users", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -318,7 +319,7 @@ const Context = ({ children }) => {
   const CartUpdate = async ({userId, productId, quantity, action, message}) => {
     try {
       let res = await axios.post(
-        "http://localhost:5000/api/cart/update",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/cart/update",
         {userId:userId, productId:productId, quantity:quantity, action:action},
         {
           headers: {
@@ -344,7 +345,7 @@ const Context = ({ children }) => {
 
   const CategoryGet=async()=>{
     try{
-       const res=await axios.get('http://localhost:5000/api/products/category')
+       const res=await axios.get('https://ecommerce-fullstack-zfpe.onrender.com/api/products/category')
        if(res.status==200){
         setCategory(res.data)
         return true;
@@ -362,7 +363,7 @@ const Context = ({ children }) => {
 
   const CategoryAdd=async(name)=>{
     try{
-       const res=await axios.post('http://localhost:5000/api/products/category',{name:name.name},{
+       const res=await axios.post('https://ecommerce-fullstack-zfpe.onrender.com/api/products/category',{name:name.name},{
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -391,7 +392,7 @@ const Context = ({ children }) => {
     setProgress(true)
       if(user?.role=="user"){
     try {
-        let res = await axios.get(`http://localhost:5000/api/cart/${id}`
+        let res = await axios.get(`https://ecommerce-fullstack-zfpe.onrender.com/api/cart/${id}`
         //   {
         //   headers:{
         //     'Content-Type': 'application/json',
@@ -427,7 +428,7 @@ const Context = ({ children }) => {
   const UpdateCategory=async(data)=>{
   
     try{
-       const res=await axios.put('http://localhost:5000/api/products/category/update',{id:data.id,name:data.name},{
+       const res=await axios.put('https://ecommerce-fullstack-zfpe.onrender.com/api/products/category/update',{id:data.id,name:data.name},{
         headers: {
           // "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

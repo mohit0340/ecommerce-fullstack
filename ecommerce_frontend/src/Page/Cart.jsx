@@ -88,7 +88,7 @@ const Cart = () => {
                     <CardMedia
                       component="img"
                       height="300px"
-                      image={`http://localhost:5000/${getImagePath(item.product.image)}`}
+                      image={`https://ecommerce-fullstack-zfpe.onrender.com/${getImagePath(item.product.image)}`}
                       alt={item.product.productname}
                     />
                     <CardContent>

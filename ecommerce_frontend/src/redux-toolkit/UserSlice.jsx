@@ -9,7 +9,7 @@
 //   reducers: {
 //     userLogin: async (state, action) => {
 //       try {
-//         const res = await axios.post("http://localhost:5000/api/auth/login", action.payload);
+//         const res = await axios.post("https://ecommerce-fullstack-zfpe.onrender.com/api/auth/login", action.payload);
 //         if (res.status === 200) {
 //           const navigate = useNavigate(); // This should not be used here
 //           state = { ...state, token: res.data.token };
@@ -32,7 +32,7 @@
 //       formData.append('avatar', action.payload.avatar);
 
 //       try {
-//         const res = await axios.post("http://localhost:5000/api/auth/register",
+//         const res = await axios.post("https://ecommerce-fullstack-zfpe.onrender.com/api/auth/register",
 //           formData,
 //           {
 //             headers: {
@@ -55,7 +55,7 @@
 //       const token = localStorage.getItem('token');
 //       if (token) {
 //         try {
-//           const res = await axios.get("http://localhost:5000/api/auth/me", {
+//           const res = await axios.get("https://ecommerce-fullstack-zfpe.onrender.com/api/auth/me", {
 //             headers: {
 //               'x-auth-token': token,
 //             },
@@ -87,7 +87,7 @@ export const userLogin = createAsyncThunk(
   async (payload, { dispatch }) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/auth/login",
         payload,
       );
       if (res.status === 200) {
@@ -114,7 +114,7 @@ export const userRegister = createAsyncThunk(
   async (formData, { dispatch }) => {
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/auth/register",
         formData,
         {
           headers: {
@@ -142,7 +142,7 @@ export const userUpdate = createAsyncThunk(
   async (formData, { dispatch }) => {
     try {
       const res = await axios.put(
-        "http://localhost:5000/api/auth/update",
+        "https://ecommerce-fullstack-zfpe.onrender.com/api/auth/update",
         formData,
         {
           headers: {
@@ -172,7 +172,7 @@ export const getUserData = createAsyncThunk(
     const token = getState().user.token; // Get token from Redux state
     if (token) {
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
+        const res = await axios.get("https://ecommerce-fullstack-zfpe.onrender.com/api/auth/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

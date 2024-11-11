@@ -20,7 +20,7 @@ const CartSlice = createSlice({
 
       try {
         let res = await axios.post(
-          "http://localhost:5000/api/product/cart/add",
+          "https://ecommerce-fullstack-zfpe.onrender.com/api/product/cart/add",
           item,
           {
             headers: {

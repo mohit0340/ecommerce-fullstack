@@ -287,7 +287,7 @@ React.useEffect(()=>{if(!user){getUserData()}},[user])
                       src={
                         preview
                           ? preview
-                          : `http://localhost:5000/${imagePath}`
+                          : `https://ecommerce-fullstack-zfpe.onrender.com/${imagePath}`
                       }
                       alt="Selected Avatar"
                       height={200}

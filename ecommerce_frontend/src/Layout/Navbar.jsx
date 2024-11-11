@@ -389,7 +389,7 @@ function Navbar() {
             {user.length!=0 && (
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="User Avatar" src={`http://localhost:5000/${imagePath}`} />
+                  <Avatar alt="User Avatar" src={`https://ecommerce-fullstack-zfpe.onrender.com/${imagePath}`} />
                 </IconButton>
               </Tooltip>
             )}

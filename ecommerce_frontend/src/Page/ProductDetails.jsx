@@ -86,7 +86,7 @@ const ProductDetails = () => {
               height: '400px',
             }}
             alt={currentProduct.productname}
-            src={`http://localhost:5000/${currentProduct.image.replace(/\\/g, '/')}`}
+            src={`https://ecommerce-fullstack-zfpe.onrender.com/${currentProduct.image.replace(/\\/g, '/')}`}
           />
           <Box sx={{ flex: 1 }}>
             <Typography variant="h4" gutterBottom>{currentProduct.productname}</Typography>

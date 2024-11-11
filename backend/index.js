@@ -7,6 +7,7 @@ import cartRoutes from './routes/cart.js'
 import cors from 'cors'
 import {fileURLToPath} from 'url';
 import path from 'path';
+import { configDotenv } from 'dotenv';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,10 +15,14 @@ const __dirname = path.dirname(__filename);
 
 const app=express()
 
+configDotenv()
 const connectDB = async () => {
+  console.log(process.env.MONGO_URI)
     try {
-      const conn = await mongoose.connect('mongodb://localhost:27017/employee-data',);
+      const conn = await mongoose.connect(String(process.env.MONGO_URI),);
+   
       if(conn){
+
         console.log(`MongoDB Connected`);
       }
      
@@ -64,7 +69,7 @@ const connectDB = async () => {
 
 
 
-app.listen('5000',()=>{
+app.listen(process.env.PORT,()=>{
     console.log('app is listening on 5000')
   
 })

@@ -89,7 +89,7 @@ const Users = () => {
             <TableBody sx={{ backgroundColor: darkMode ? "#303030" : "#ACB1D6", color: darkMode ? "#E2DFD0" : "inherit" }}>
               {usersData.length > 0 ? usersData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
                 <TableRow key={user._id}>
-                  <TableCell><Avatar src={`http://localhost:5000/${user.avatar.replace(/\\/g, '/')}`} alt={`${user.firstname} ${user.lastname}`} /></TableCell>
+                  <TableCell><Avatar src={`https://ecommerce-fullstack-zfpe.onrender.com/${user.avatar.replace(/\\/g, '/')}`} alt={`${user.firstname} ${user.lastname}`} /></TableCell>
                   <TableCell sx={{ color: darkMode ? "#E2DFD0" : "inherit", textAlign: "center" }}>{user.firstname}</TableCell>
                   <TableCell sx={{ color: darkMode ? "#E2DFD0" : "inherit", textAlign: "center" }}>{user.lastname}</TableCell>
                   <TableCell sx={{ color: darkMode ? "#E2DFD0" : "inherit", textAlign: "center" }}>{user.email}</TableCell>

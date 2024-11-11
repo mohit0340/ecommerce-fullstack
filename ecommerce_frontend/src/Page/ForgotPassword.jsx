@@ -29,7 +29,7 @@ const ForgotPassword = () => {
 
   const sendOTP = async (values, { setSubmitting, setErrors }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/forgot-password', { email: values.email });
+      const response = await axios.post('https://ecommerce-fullstack-zfpe.onrender.com/api/users/forgot-password', { email: values.email });
 
 
       if(response.status==200){
@@ -51,7 +51,7 @@ const ForgotPassword = () => {
 
   const verifyOTPAndChangePassword = async (values, { setSubmitting, setErrors }) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/update-password', { email, otp: values.otp, newPassword: values.newpassword });
+      const response = await axios.post('https://ecommerce-fullstack-zfpe.onrender.com/api/users/update-password', { email, otp: values.otp, newPassword: values.newpassword });
       if(response.status== 200){
         toast.success(response.data.message)
         setSubmitting(false);

@@ -16,7 +16,7 @@ const ProductCard = ({ product }) => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [newImage, setNewImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState(`http://localhost:5000/${image.replace(/\\/g, '/')}`);
+  const [previewImage, setPreviewImage] = useState(`https://ecommerce-fullstack-zfpe.onrender.com/${image.replace(/\\/g, '/')}`);
   const imagePath = image.replace(/\\/g, '/');
   const navigate=useNavigate()
 
@@ -86,7 +86,7 @@ color: darkMode ? "#E2DFD0" : "black",
         <CardMedia
           component="img"
           height="150"
-          image={`http://localhost:5000/${imagePath}`}
+          image={`https://ecommerce-fullstack-zfpe.onrender.com/${imagePath}`}
           alt={productname}
           sx={{objectFit:"contain"}}
         />
